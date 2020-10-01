@@ -18,6 +18,15 @@ class App extends React.Component {
       .then((data) => this.setState({ posts: data }));
   }
   render() {
+    const ColoredLine = ({ color }) => (
+      <hr
+        style={{
+          color: color,
+          backgroundColor: color,
+          height: 2,
+        }}
+      />
+    );
     return (
       <div>
         <h1>Posts</h1>
@@ -47,8 +56,10 @@ class App extends React.Component {
                   height: "35px",
                   width: "35px",
                   margin: "2px",
+                  margin: "5px",
                 }}
               ></button>
+              {post.up_vote}
               <button
                 type="button"
                 style={{
@@ -56,8 +67,11 @@ class App extends React.Component {
                   backgroundRepeat: "no-repeat",
                   height: "35px",
                   width: "35px",
+                  margin: "5px",
                 }}
               ></button>
+              {post.down_vote}
+              <ColoredLine color="gray" />
             </li>
           ))}
         </ul>
