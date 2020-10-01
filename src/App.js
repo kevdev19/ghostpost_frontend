@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import upvote from "./img/upvote.png";
+import downvote from "./img/downvote.png";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,6 +39,25 @@ class App extends React.Component {
               <p>
                 <strong>Updated:</strong> {post.update_time}
               </p>
+              <button
+                type="button"
+                style={{
+                  backgroundImage: `url(${upvote})`,
+                  backgroundRepeat: "no-repeat",
+                  height: "35px",
+                  width: "35px",
+                  margin: "2px",
+                }}
+              ></button>
+              <button
+                type="button"
+                style={{
+                  backgroundImage: `url(${downvote})`,
+                  backgroundRepeat: "no-repeat",
+                  height: "35px",
+                  width: "35px",
+                }}
+              ></button>
             </li>
           ))}
         </ul>
