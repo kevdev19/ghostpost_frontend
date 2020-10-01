@@ -21,7 +21,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>Posts</h1>
-        <ul>
+        <ul style={{ listStyleType: "none" }}>
           {this.state.posts.map((post) => (
             <li key={post.toString()}>
               <p>
