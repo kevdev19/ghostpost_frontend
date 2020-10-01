@@ -11,7 +11,41 @@ class App extends React.Component {
       posts: [],
     };
   }
+  // handleUpVote = (e, id) => {
+  //   e.preventDefault();
+  //   console.log(id);
+  //   this.state.posts.map((post) => {
+  //     if (post.id === id) {
 
+  //       this.setState({
+
+  //       })
+  //     }
+  //   });
+  // };
+
+  handleUpVote = (event, postid) => {
+    const newPostList = this.state.posts.map((post) => {
+      if (post.id === postid) {
+        return {
+          ...post,
+          up_vote: post.up_vote + 1,
+          total_votes: post.total_votes + 1,
+        };
+      }
+      return post;
+    });
+    this.setState({ posts: newPostList });
+  };
+  handleDownVote = (event, postid) => {
+    const newPostList = this.state.posts.map((post) => {
+      if (post.id === postid) {
+        return { ...post, down_vote: post.down_vote - 1 };
+      }
+      return post;
+    });
+    this.setState({ posts: newPostList });
+  };
   componentDidMount() {
     fetch("http://127.0.0.1:8000/api/roastboast/")
       .then((response) => response.json())
@@ -30,9 +64,26 @@ class App extends React.Component {
     return (
       <div>
         <h1>Posts</h1>
+        <ul style={{ listStyle: "none" }}>
+          <li>
+            <a href="#">All Posts</a>
+          </li>
+          <li>
+            <a href="#">Filter by Boasts</a>
+          </li>
+          <li>
+            <a href="#">Filter by Roasts</a>
+          </li>
+          <li>
+            <a href="#">Most Popular</a>
+          </li>
+          <li>
+            <a href="#">Create Post</a>
+          </li>
+        </ul>
         <ul style={{ listStyleType: "none" }}>
           {this.state.posts.map((post) => (
-            <li key={post.toString()}>
+            <li key={post.id}>
               <p>
                 <h2>{post.post_type}</h2>
               </p>
@@ -50,18 +101,19 @@ class App extends React.Component {
               </p>
               <button
                 type="button"
+                onClick={(e) => this.handleUpVote(e, post.id)}
                 style={{
                   backgroundImage: `url(${upvote})`,
                   backgroundRepeat: "no-repeat",
                   height: "35px",
                   width: "35px",
-                  margin: "2px",
                   margin: "5px",
                 }}
               ></button>
               {post.up_vote}
               <button
                 type="button"
+                onClick={(e) => this.handleDownVote(e, post.id)}
                 style={{
                   backgroundImage: `url(${downvote})`,
                   backgroundRepeat: "no-repeat",
