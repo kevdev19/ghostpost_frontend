@@ -9,6 +9,8 @@ class App extends React.Component {
 
     this.state = {
       posts: [],
+      currentOrdering: "oldest",
+      isOldestFirst: true,
     };
   }
   // handleUpVote = (e, id) => {
@@ -25,6 +27,7 @@ class App extends React.Component {
   // };
 
   handleUpVote = (event, postid) => {
+    event.preventDefault();
     const newPostList = this.state.posts.map((post) => {
       if (post.id === postid) {
         return {
@@ -37,14 +40,26 @@ class App extends React.Component {
     });
     this.setState({ posts: newPostList });
   };
-  handleDownVote = (event, postid) => {
+  handleDownVote = (event, postId) => {
+    event.preventDefault();
     const newPostList = this.state.posts.map((post) => {
-      if (post.id === postid) {
+      if (post.id === postId) {
         return { ...post, down_vote: post.down_vote - 1 };
       }
       return post;
     });
     this.setState({ posts: newPostList });
+  };
+
+  handleMostPopularSort = (event) => {
+    const { posts } = this.state;
+    let newPopularData = posts
+      .sort((a, b) => a.total_votes - b.total_votes)
+      .reverse();
+    console.log(newPopularData);
+    this.setState({
+      posts: newPopularData,
+    });
   };
   componentDidMount() {
     fetch("http://127.0.0.1:8000/api/roastboast/")
@@ -75,7 +90,9 @@ class App extends React.Component {
             <a href="#">Filter by Roasts</a>
           </li>
           <li>
-            <a href="#">Most Popular</a>
+            <a href="#" onClick={(e) => this.handleMostPopularSort()}>
+              Most Popular
+            </a>
           </li>
           <li>
             <a href="#">Create Post</a>
