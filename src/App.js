@@ -38,20 +38,47 @@ class App extends React.Component {
       }
       return post;
     });
-    this.setState({ posts: newPostList });
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch(
+      "http://127.0.0.1:8000/api/roastboast/" + postid + "/upvote/",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => this.setState({ posts: newPostList }));
   };
-  handleDownVote = (event, postId) => {
+
+  handleDownVote = (event, postid) => {
     event.preventDefault();
     const newPostList = this.state.posts.map((post) => {
-      if (post.id === postId) {
-        return { ...post, down_vote: post.down_vote - 1 };
+      if (post.id === postid) {
+        return {
+          ...post,
+          down_vote: post.down_vote - 1,
+          total_votes: post.total_votes - 1,
+        };
       }
       return post;
     });
-    this.setState({ posts: newPostList });
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch(
+      "http://127.0.0.1:8000/api/roastboast/" + postid + "/downvote/",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => this.setState({ posts: newPostList }));
   };
 
   handleMostPopularSort = (event) => {
+    event.preventDefault();
     const { posts } = this.state;
     let newPopularData = posts
       .sort((a, b) => a.total_votes - b.total_votes)
@@ -61,6 +88,23 @@ class App extends React.Component {
       posts: newPopularData,
     });
   };
+
+  handleBoastFilter = (event) => {
+    event.preventDefault();
+    const { posts } = this.state;
+    let newBoastData = posts.filter((type) => type.post_type.includes("Boast"));
+    console.log(newBoastData);
+    this.setState({ posts: newBoastData });
+  };
+
+  handleRoastFilter = (event) => {
+    event.preventDefault();
+    console.log("You hit Roast");
+    const { posts } = this.state;
+    let newRoastData = posts.filter((type) => type.post_type.includes("Roast"));
+    this.setState({ posts: newRoastData });
+  };
+
   componentDidMount() {
     fetch("http://127.0.0.1:8000/api/roastboast/")
       .then((response) => response.json())
@@ -84,13 +128,17 @@ class App extends React.Component {
             <a href="#">All Posts</a>
           </li>
           <li>
-            <a href="#">Filter by Boasts</a>
+            <a href="#" onClick={this.handleBoastFilter}>
+              Filter by Boasts
+            </a>
           </li>
           <li>
-            <a href="#">Filter by Roasts</a>
+            <a href="#" onClick={this.handleRoastFilter}>
+              Filter by Roasts
+            </a>
           </li>
           <li>
-            <a href="#" onClick={(e) => this.handleMostPopularSort()}>
+            <a href="#" onClick={this.handleMostPopularSort}>
               Most Popular
             </a>
           </li>
